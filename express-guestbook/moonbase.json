@@ -1,0 +1,6 @@
+{
+  "database": {
+    "engine": "postgresql",
+    "migrate": "node migrate.js"
+  }
+}

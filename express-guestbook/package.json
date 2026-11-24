@@ -1,0 +1,19 @@
+{
+  "name": "moonbase-example-express-guestbook",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A Node/Express guestbook that stores entries in a moonbase managed PostgreSQL database.",
+  "license": "MIT",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "migrate": "node migrate.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  }
+}
