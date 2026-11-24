@@ -86,7 +86,7 @@ npm start
 To run it fully you need a local PostgreSQL that accepts TLS connections, the CA file that signed its certificate, and the name on that certificate. The app keeps certificate verification on locally too:
 
 ```bash
-export DATABASE_URL="postgres://USER:PASSWORD@127.0.0.1:5432/guestbook"
+export DATABASE_URL="postgres://localhost:5432/guestbook"   # add your local user and password to this address
 export PILOT_DB_CA_FILE="/path/to/ca.pem"
 export PILOT_DB_SERVER_NAME="name-on-the-server-certificate"
 npm run migrate
