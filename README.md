@@ -2,7 +2,7 @@
 
 **AI built your app. moonbase runs everything else.**
 
-Hosting, database, domains, forms, analytics, uptime alerts, rollbacks, team access — and more. All in one platform, all run by your AI agent.
+Hosting, database, domains, analytics, rollbacks, team access — all in one platform, all run by your AI agent.
 
 ### → [moonbase.cloud](https://moonbase.cloud/?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch)
 
