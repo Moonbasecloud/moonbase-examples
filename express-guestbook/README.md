@@ -13,7 +13,7 @@ express-guestbook/
 
 ## The database
 
-A managed PostgreSQL database is optional on moonbase: up to one per mission, where it is enabled for the account. This example asks for one with `moonbase.json`:
+A managed PostgreSQL database is optional on moonbase and included on every plan, Free included: up to one per mission, inside the plan's storage. This example asks for one with `moonbase.json`:
 
 ```json
 {
@@ -70,7 +70,7 @@ With the moonbase connector connected (see the [repository README](../README.md#
 Deploy the express-guestbook folder to moonbase with the managed PostgreSQL database its moonbase.json asks for, and give me the live link.
 ```
 
-If the managed database is not enabled for your account, moonbase does not act on `moonbase.json` and the deploy result says so. The guestbook then stops at start and names the missing settings; it never runs without its database. Your agent can check where your account stands before you deploy.
+If moonbase cannot create the database, the deploy result says so. The guestbook then stops at start and names the missing settings; it never runs without its database.
 
 ## Run it locally
 

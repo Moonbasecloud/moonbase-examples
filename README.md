@@ -48,7 +48,7 @@ There is no deploy button here on purpose: a moonbase deploy goes through your a
 - A deployed project is called a **mission**.
 - An app must listen on the `PORT` environment variable. The two server examples do.
 - The container's own disk does not keep data between deploys. The guestbook keeps its data in a database for that reason.
-- A managed PostgreSQL database is optional: up to one per mission, where it is enabled for the account. A project asks for one with a `moonbase.json` file, as the guestbook does.
+- A managed PostgreSQL database is optional and included on every plan, Free included: up to one per mission, inside the plan's storage. A project asks for one with a `moonbase.json` file, as the guestbook does.
 - Plans and limits: [Pricing](https://moonbase.cloud/pricing?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch).
 
 ## License
