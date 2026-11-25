@@ -12,9 +12,9 @@ This repository holds three small projects that deploy to moonbase as they are. 
 
 | Example | What it shows | Kind |
 |---|---|---|
-| [`static-landing`](static-landing/) | A landing page with images. No build step. | Static |
+| [`static-landing`](static-landing/) | A landing page with images. No build step. [Live demo](https://gh-example-static-landing.moonbase.host) | Static |
 | [`express-guestbook`](express-guestbook/) | A Node/Express app that saves entries in a moonbase managed PostgreSQL database. | Node server + database |
-| [`nextjs-minimal`](nextjs-minimal/) | A minimal Next.js app with a server-rendered page. | Next.js |
+| [`nextjs-minimal`](nextjs-minimal/) | A minimal Next.js app with a server-rendered page. [Live demo](https://gh-example-nextjs-minimal.moonbase.host) | Next.js |
 
 ## Before you start
 
