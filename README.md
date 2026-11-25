@@ -30,11 +30,13 @@ This repository holds three small projects that deploy to moonbase as they are. 
 
 ## Deploy with your AI agent
 
-Paste the prompt from the example's own README. For instance, for the landing page:
+Paste the prompt from the example's own README. For instance, for the guestbook with its database:
 
 ```text
-Deploy the static-landing folder to moonbase and give me the live link.
+Deploy the express-guestbook folder to moonbase with the managed PostgreSQL database its moonbase.json asks for, and give me the live link.
 ```
+
+Then keep building in the same chat: *"Add a page that lists the newest entries first."* *"Connect my domain."* *"Roll back to the previous version."* Changes, the database, domains and rollbacks all go through the same conversation.
 
 Your AI tool shows each action before it runs and asks for your OK before a deploy, unless you told it to always allow that. When the deploy finishes you get a live HTTPS address.
 
