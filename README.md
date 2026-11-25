@@ -1,5 +1,7 @@
 # moonbase examples
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Deploy with your AI agent](https://img.shields.io/badge/deploy%20with-your%20AI%20agent-6E40C9.svg)](https://moonbase.cloud/docs/deploy-from-ai-chat?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch)
+
 **AI built your app. moonbase runs everything else.**
 
 Hosting, database, domains, analytics, rollbacks, team access — all in one platform, all run by your AI agent.
