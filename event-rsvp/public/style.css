@@ -1,33 +1,238 @@
-:root { --ink: #14181f; --muted: #5b6472; --paper: #f6f5ef; --card: #fff; --line: #e1dfd5; --accent: #2e6b3f; --error: #b3261e; }
+/* Full Moon Night. Every color is a variable here, so the look can be
+   restyled in one place. The moon itself is public/moon.svg. */
+:root {
+  --sky: #0a1330;          /* page background, the night sky */
+  --sky-deep: #050a1c;     /* bottom of the sky gradient */
+  --panel: #121d44;        /* cards and the form */
+  --panel-line: #26356a;   /* card borders and dividers */
+  --field: #0c1636;        /* inputs and choices */
+  --field-line: #6878b0;   /* input and choice borders, 3:1 or more */
+  --ink: #eef1fb;          /* main text */
+  --muted: #a9b4d6;        /* secondary text */
+  --star: #ffffff;
+  --accent: #29b478;       /* moonbase green, used sparingly */
+  --accent-ink: #04150d;   /* text on the green button */
+  --error: #ff9b8f;
+  --radius: 14px;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
 * { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--paper); line-height: 1.5; }
-main { max-width: 680px; margin: 0 auto; padding: 32px 16px 48px; }
-h1 { margin: 0 0 12px; font-size: 32px; line-height: 1.2; }
-h2 { margin: 0 0 12px; font-size: 20px; }
-.kicker { margin: 0 0 4px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; font-size: 13px; }
-.facts { display: grid; gap: 6px; margin: 0 0 16px; }
-.facts div { display: flex; gap: 12px; }
-.facts dt { width: 56px; flex: none; color: var(--muted); }
-.facts dd { margin: 0; font-weight: 600; }
-.lead { margin: 0 0 24px; color: var(--muted); }
-form, .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
-label, legend { display: block; font-weight: 600; font-size: 14px; margin-bottom: 4px; }
-input, select { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; margin-bottom: 14px; background: #fff; }
-fieldset { border: 1px dashed var(--line); border-radius: 8px; padding: 12px 12px 0; margin: 0 0 16px; }
-legend { padding: 0 4px; }
+html { background: var(--sky-deep); }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: linear-gradient(180deg, var(--sky) 0%, var(--sky-deep) 100%);
+}
+
+/* The stars: two layers of small dots; the second one twinkles. */
+.sky, .sky::after {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.sky {
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, var(--star), transparent 60%),
+    radial-gradient(1px 1px at 28% 72%, var(--star), transparent 60%),
+    radial-gradient(1.5px 1.5px at 44% 32%, var(--star), transparent 60%),
+    radial-gradient(1px 1px at 63% 12%, var(--star), transparent 60%),
+    radial-gradient(1px 1px at 78% 54%, var(--star), transparent 60%),
+    radial-gradient(1.5px 1.5px at 91% 26%, var(--star), transparent 60%),
+    radial-gradient(1px 1px at 8% 88%, var(--star), transparent 60%),
+    radial-gradient(1px 1px at 54% 90%, var(--star), transparent 60%),
+    radial-gradient(1px 1px at 86% 82%, var(--star), transparent 60%);
+  background-size: 640px 640px;
+  opacity: 0.55;
+}
+.sky::after {
+  content: "";
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 40%, var(--star), transparent 60%),
+    radial-gradient(1px 1px at 37% 8%, var(--star), transparent 60%),
+    radial-gradient(1.5px 1.5px at 70% 66%, var(--star), transparent 60%),
+    radial-gradient(1px 1px at 95% 44%, var(--star), transparent 60%),
+    radial-gradient(1px 1px at 50% 58%, var(--star), transparent 60%);
+  background-size: 900px 900px;
+  animation: twinkle 5s ease-in-out infinite alternate;
+}
+@keyframes twinkle { from { opacity: 0.25; } to { opacity: 0.9; } }
+@media (prefers-reduced-motion: reduce) {
+  .sky::after { animation: none; opacity: 0.6; }
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 16px 48px;
+}
+
+/* Hero */
+.hero { text-align: center; margin-bottom: 36px; }
+.moon {
+  display: block;
+  width: 168px;
+  height: 168px;
+  margin: 0 auto 8px;
+}
+.kicker { margin: 0 0 4px; color: var(--muted); font-size: 15px; }
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(48px, 13vw, 88px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.tagline { margin: 12px 0 0; font-size: 18px; color: var(--ink); }
+.hero-small { margin-bottom: 28px; }
+.hero-small .moon { width: 96px; height: 96px; }
+.hero-small h1 { font-size: clamp(40px, 9vw, 56px); }
+
+h2 {
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+/* When / where / what to bring */
+.facts {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 24px;
+}
+@media (min-width: 640px) { .facts { grid-template-columns: repeat(3, 1fr); } }
+.fact {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+}
+.fact dt { color: var(--muted); font-size: 14px; margin-bottom: 4px; }
+.fact dd { margin: 0; font-weight: 500; }
+.lead { margin: 0 0 32px; color: var(--muted); max-width: 64ch; }
+
+/* Panels: the form and the owner sections */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  margin-bottom: 16px;
+}
+@media (min-width: 640px) { .panel { padding: 32px; } }
+
+/* Form fields */
+.field { margin: 0 0 20px; }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+label, legend { display: block; font-weight: 600; font-size: 15px; margin-bottom: 8px; padding: 0; }
+input[type="text"], input:not([type]), input[type="email"], input[type="password"] {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--field-line);
+  border-radius: 10px;
+  background: var(--field);
+  color: var(--ink);
+  font: inherit;
+}
+
+/* Choices: radio buttons drawn as pills, the real input kept for keyboards
+   and screen readers. */
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choice { margin: 0; font-weight: 500; position: relative; }
+.choice input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.choice span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 1px solid var(--field-line);
+  border-radius: 999px;
+  background: var(--field);
+  cursor: pointer;
+}
+.counts .choice span { min-width: 48px; padding: 10px 0; }
+.choice:hover span { border-color: var(--ink); }
+.choice input:checked + span {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, var(--field));
+}
+.choice input:focus-visible + span { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+.meals-group > legend { margin-bottom: 4px; }
+.meal { margin-top: 12px; }
+.meal legend { font-weight: 500; font-size: 14px; color: var(--muted); margin-bottom: 6px; }
 .meal[hidden] { display: none; }
-button { padding: 11px 20px; border: 0; border-radius: 8px; background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+
+button {
+  min-height: 52px;
+  padding: 12px 28px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.08); }
+@media (max-width: 479px) { button { width: 100%; } }
 :focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
 .hint, .muted { color: var(--muted); font-size: 14px; }
-.error { color: var(--error); font-weight: 600; margin: 0 0 12px; }
-.confirm h2 { color: var(--accent); }
-.meals, .totals { padding: 0; margin: 0 0 12px; list-style: none; }
-.totals li { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); }
-.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.big { display: block; font-size: 36px; font-weight: 700; line-height: 1.1; }
+.hint { margin: 16px 0 0; }
+.error {
+  color: var(--error);
+  font-weight: 600;
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border: 1px solid currentColor;
+  border-radius: 10px;
+}
+.confirm h2 { margin-bottom: 8px; }
+
+/* Lists of label and value: confirmation snacks and owner totals */
+.rows { padding: 0; margin: 16px 0; list-style: none; }
+.rows li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--panel-line);
+}
+.rows li:last-child { border-bottom: 0; }
+
+/* Owner view */
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px; }
+.stat { color: var(--muted); }
+.big {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.owner main { max-width: 960px; }
 .table { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; }
+table { width: 100%; min-width: 680px; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--panel-line); vertical-align: top; overflow-wrap: anywhere; }
+th { white-space: nowrap; }
+th { color: var(--muted); font-weight: 500; }
 .num { text-align: right; }
-footer { margin-top: 32px; color: var(--muted); font-size: 14px; }
-footer a, a { color: var(--accent); }
+
+a { color: var(--accent); }
+footer { margin-top: 40px; text-align: center; color: var(--muted); font-size: 14px; }

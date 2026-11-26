@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="The full moon">
+  <!-- The full moon: a soft glow, the disc, and a few seas and craters.
+       Replace this file to change the moon; the page shows it at /moon.svg. -->
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="55%" stop-color="#f4f1e4" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#f4f1e4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="disc" cx="40%" cy="36%" r="70%">
+      <stop offset="0%" stop-color="#fbf9f1"/>
+      <stop offset="70%" stop-color="#e6e1cf"/>
+      <stop offset="100%" stop-color="#cfc8b2"/>
+    </radialGradient>
+  </defs>
+  <circle cx="100" cy="100" r="100" fill="url(#glow)"/>
+  <circle cx="100" cy="100" r="62" fill="url(#disc)"/>
+  <g fill="#bfb79f" fill-opacity="0.55">
+    <path d="M70 72c8-9 25-8 31 2s-2 20-14 21-24-12-17-23z"/>
+    <path d="M108 104c10-6 28-2 31 9s-9 19-21 17-18-20-10-26z"/>
+    <ellipse cx="82" cy="122" rx="12" ry="8"/>
+  </g>
+  <g fill="none" stroke="#b7ae94" stroke-opacity="0.7" stroke-width="1.5">
+    <circle cx="124" cy="78" r="6"/>
+    <circle cx="98" cy="140" r="4"/>
+    <circle cx="60" cy="100" r="3.5"/>
+    <circle cx="140" cy="132" r="3"/>
+  </g>
+</svg>
