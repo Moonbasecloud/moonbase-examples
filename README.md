@@ -1,6 +1,6 @@
 # moonbase examples
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) · [Docs](https://moonbase.cloud/docs/deploy-from-ai-chat?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch)
+[![CI](https://github.com/Moonbasecloud/moonbase-examples/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Moonbasecloud/moonbase-examples/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) · [Docs](https://moonbase.cloud/docs/deploy-from-ai-chat?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch)
 
 **AI built your app. moonbase runs everything else.**
 
