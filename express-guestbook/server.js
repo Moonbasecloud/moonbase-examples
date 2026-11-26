@@ -1,10 +1,14 @@
 const path = require("node:path");
 const express = require("express");
 const { createPool } = require("./db");
+const { createRateLimit } = require("./rate-limit");
 
 const MAX_NAME = 40;
 const MAX_MESSAGE = 280;
 const PAGE_SIZE = 50;
+// Each visitor address may save 5 entries per 10 minutes.
+const POST_LIMIT = 5;
+const POST_WINDOW_MS = 10 * 60 * 1000;
 
 let pool;
 try {
@@ -52,7 +56,9 @@ function cleanText(value, max) {
   return text.length >= 1 && text.length <= max ? text : null;
 }
 
-app.post("/api/entries", async (req, res) => {
+const limitPosts = createRateLimit({ limit: POST_LIMIT, windowMs: POST_WINDOW_MS });
+
+app.post("/api/entries", limitPosts, async (req, res) => {
   const name = cleanText(req.body?.name, MAX_NAME);
   const message = cleanText(req.body?.message, MAX_MESSAGE);
   if (!name || !message) {

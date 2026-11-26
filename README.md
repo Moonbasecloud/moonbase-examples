@@ -1,6 +1,6 @@
 # moonbase examples
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Deploy with your AI agent](https://img.shields.io/badge/deploy%20with-your%20AI%20agent-6E40C9.svg)](https://moonbase.cloud/docs/deploy-from-ai-chat?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) · [Docs](https://moonbase.cloud/docs/deploy-from-ai-chat?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch)
 
 **AI built your app. moonbase runs everything else.**
 
@@ -8,13 +8,12 @@ Hosting, database, domains, analytics, rollbacks, team access — all in one pla
 
 ### → [moonbase.cloud](https://moonbase.cloud/?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch)
 
-This repository holds three small projects that deploy to moonbase as they are. Each one is short enough to read in a few minutes, and each has a one-line prompt you paste into your AI agent to put it online.
+This repository holds two small apps that deploy to moonbase as they are. Each one saves its data in a moonbase managed PostgreSQL database, is short enough to read in a few minutes, and has a one-line prompt you paste into your AI agent to put it online. After that you manage it from the same chat.
 
 | Example | What it shows | Kind |
 |---|---|---|
-| [`static-landing`](static-landing/) | A landing page with images. No build step. [Live demo](https://gh-example-static-landing.moonbase.host) | Static |
-| [`express-guestbook`](express-guestbook/) | A Node/Express app that saves entries in a moonbase managed PostgreSQL database. | Node server + database |
-| [`nextjs-minimal`](nextjs-minimal/) | A minimal Next.js app with a server-rendered page. [Live demo](https://gh-example-nextjs-minimal.moonbase.host) | Next.js |
+| [`express-guestbook`](express-guestbook/) | A Node/Express app that saves entries in a moonbase managed PostgreSQL database. [Live demo](https://gh-example-express-guestbook.moonbase.host) | Node server + database |
+| [`nextjs-minimal`](nextjs-minimal/) | A small Next.js app that saves notes in a moonbase managed PostgreSQL database. [Live demo](https://gh-example-nextjs-minimal.moonbase.host) | Next.js + database |
 
 ## Before you start
 
@@ -36,11 +35,26 @@ Paste the prompt from the example's own README. For instance, for the guestbook 
 Deploy the express-guestbook folder to moonbase with the managed PostgreSQL database its moonbase.json asks for, and give me the live link.
 ```
 
-Then keep building in the same chat: *"Add a page that lists the newest entries first."* *"Connect my domain."* *"Roll back to the previous version."* Changes, the database, domains and rollbacks all go through the same conversation.
-
-Your AI tool shows each action before it runs and asks for your OK before a deploy, unless you told it to always allow that. When the deploy finishes you get a live HTTPS address.
+Depending on its settings, your assistant may ask you to confirm before it deploys. When the deploy finishes you get a live HTTPS address.
 
 There is no deploy button here on purpose: a moonbase deploy goes through your agent, through an upload on moonbase itself, or through the API.
+
+## Manage it from chat
+
+Keep talking to the same agent. It uses a moonbase connector tool for each of these; nothing needs a terminal.
+
+| Paste this | What the agent does |
+|---|---|
+| `Is my guestbook live? Check its status and its database.` | Calls `deploy_status`: whether it is live, the current version, the live address and the database. |
+| `Show me the recent deploys of my guestbook and why any of them failed.` | Calls `deploy_logs`: the recent deploys, their status and moonbase's explanation of a failed one. |
+| `Add a page that lists the newest entries first, then deploy it.` | Changes the code and calls `deploy`. The database migration runs before the new version goes live. |
+| `Roll back my guestbook to the previous version.` | Calls `list_versions` to find it, then `rollback`. |
+| `Connect guestbook.example.com to my guestbook.` | Calls `add_domain` and tells you the DNS record that proves you own the domain. |
+| `Export my guestbook database.` | Calls `export_database` and gives you the link to your database's export page, where you download it. |
+
+`deploy_logs` shows the deploy history and why a deploy failed. It does not show the logs of your running app.
+
+A rollback puts an earlier version's code back live. It does not undo rows already saved in the database.
 
 ## Other ways to deploy
 
@@ -50,9 +64,9 @@ There is no deploy button here on purpose: a moonbase deploy goes through your a
 ## What to know
 
 - A deployed project is called a **mission**.
-- An app must listen on the `PORT` environment variable. The two server examples do.
-- The container's own disk does not keep data between deploys. The guestbook keeps its data in a database for that reason.
-- A managed PostgreSQL database is optional and included on every plan, Free included: up to one per mission, inside the plan's storage. A project asks for one with a `moonbase.json` file, as the guestbook does.
+- An app must listen on the `PORT` environment variable. Both examples do.
+- The container's own disk does not keep data between deploys. Both examples keep their data in a database for that reason.
+- A managed PostgreSQL database is optional and included on every plan, Free included: up to one per mission, inside the plan's storage. A project asks for one with a `moonbase.json` file, as both examples do.
 - Plans and limits: [Pricing](https://moonbase.cloud/pricing?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch).
 
 ## License

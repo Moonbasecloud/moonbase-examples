@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Next.js on moonbase",
-  description: "A minimal Next.js app. An example project for moonbase.",
+  title: "Notes on moonbase",
+  description: "A small Next.js app with a managed database. An example project for moonbase.",
 };
 
 export default function RootLayout({ children }) {
