@@ -24,7 +24,7 @@ event-rsvp/
   event.js           the event details, the largest party and the menu
   server.js          the Express app: the pages, the RSVP form, the owner view and /readyz
   views.js           the HTML pages
-  rate-limit.js      a small per-address limit on sending the forms
+  rate-limit.js      per-address request limits, with the express-rate-limit package
   public/            the stylesheet and form.js
 ```
 
@@ -144,7 +144,7 @@ Then open `http://localhost:3000`, and `http://localhost:3000/owner` for the own
 ## How it behaves
 
 - `GET /readyz` answers `200` after one successful `SELECT 1` and `503` while the database cannot be reached. moonbase asks this path after a deploy.
-- `POST /rsvp` takes the form: name up to 80 characters, an email address, 1 to 6 guests and a meal for each guest. Each visitor address can send it 10 times per 10 minutes; after that it answers `429` with a `Retry-After` header. The count is kept in the app's memory, so it starts again when the app restarts or sleeps.
+- `POST /rsvp` takes the form: name up to 80 characters, an email address, 1 to 6 guests and a meal for each guest. Each visitor address can send it 10 times per 10 minutes; after that it answers `429` with a `Retry-After` header. Every address can also make up to 300 requests a minute in all. The counts are kept in the app's memory, so they start again when the app restarts or sleeps.
 - One RSVP per email address, compared without case. Sending again replaces the name, the number of guests and the meals.
 - Queries bind their values as parameters, and every page writes visitors' text as text, never as HTML.
 - The owner view is not cached and asks search engines not to index it. Anyone with the owner key sees the guest list, emails included, so share the key only with people who should.

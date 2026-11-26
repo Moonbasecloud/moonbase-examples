@@ -30,6 +30,10 @@ app.use((_req, res, next) => {
 app.use(express.urlencoded({ extended: false, limit: "4kb" }));
 app.use(express.static(path.join(__dirname, "public"), { index: false }));
 
+// A generous limit on every request from one address, on top of the tighter
+// limits on the two forms below.
+app.use(createRateLimit({ limit: 300, windowMs: 60 * 1000 }));
+
 // moonbase asks /readyz after a deploy to learn whether the app is really
 // serving: 2xx when ready, 503 while it is not.
 app.get("/readyz", async (_req, res) => {
