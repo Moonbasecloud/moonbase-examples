@@ -1,0 +1,139 @@
+name: CI
+
+# For every example folder (any top-level folder with a package.json):
+# install, build, run its test and lint scripts when it has them, then start
+# the app against a throwaway PostgreSQL that only accepts TLS, run the
+# example's migration, and check that /readyz and / answer 200.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    name: Find examples
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      examples: ${{ steps.list.outputs.examples }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: list
+        run: |
+          examples=$(for f in */package.json; do dirname "$f"; done | jq -R . | jq -cs .)
+          echo "Examples: $examples"
+          [ "$examples" != "[]" ] || { echo "No example folders found"; exit 1; }
+          echo "examples=$examples" >> "$GITHUB_OUTPUT"
+
+  example:
+    name: ${{ matrix.example }}
+    needs: discover
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        example: ${{ fromJSON(needs.discover.outputs.examples) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.example }}
+    env:
+      PORT: "3000"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Install
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      - name: Build
+        run: |
+          if npm pkg get scripts.build | grep -qv '{}'; then npm run build; else echo "No build script"; fi
+
+      - name: Test
+        run: |
+          if npm pkg get scripts.test | grep -qv '{}'; then npm test; else echo "No test script"; fi
+
+      - name: Lint
+        run: |
+          if npm pkg get scripts.lint | grep -qv '{}'; then npm run lint; else echo "No lint script"; fi
+
+      # A local PostgreSQL that only accepts TLS, with a certificate signed by a
+      # CA made in this job. The examples keep certificate verification on, so
+      # this checks the same connection recipe they use on moonbase.
+      - name: Start a TLS-only PostgreSQL
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir -p pgtls && cd pgtls
+          openssl req -x509 -newkey rsa:2048 -nodes -days 2 -subj "/CN=ci-test-ca" \
+            -keyout ca.key -out ca.pem
+          openssl req -newkey rsa:2048 -nodes -subj "/CN=ci-db.test" \
+            -keyout server.key -out server.csr
+          printf 'subjectAltName=DNS:ci-db.test\n' > san.ext
+          openssl x509 -req -in server.csr -CA ca.pem -CAkey ca.key -CAcreateserial \
+            -days 2 -extfile san.ext -out server.crt
+          chmod 644 server.key
+          # Unix socket for the image's own first-start setup; TCP only with TLS.
+          printf 'local all all trust\nhostssl all all all trust\n' > pg_hba.conf
+          docker run -d --name pg -p 5432:5432 \
+            -e POSTGRES_HOST_AUTH_METHOD=trust \
+            -v "$PWD:/certs:ro" \
+            --entrypoint sh postgres:17 -c '
+              cp /certs/server.crt /certs/server.key /certs/pg_hba.conf /tmp/ &&
+              chown postgres /tmp/server.crt /tmp/server.key /tmp/pg_hba.conf &&
+              chmod 600 /tmp/server.key &&
+              exec docker-entrypoint.sh postgres -c ssl=on \
+                -c ssl_cert_file=/tmp/server.crt -c ssl_key_file=/tmp/server.key \
+                -c hba_file=/tmp/pg_hba.conf'
+          for _ in $(seq 1 30); do
+            if docker exec pg pg_isready -h 127.0.0.1 -U postgres >/dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          docker exec pg pg_isready -h 127.0.0.1 -U postgres || { docker logs pg; exit 1; }
+          {
+            echo "DATABASE_URL=postgres://postgres@127.0.0.1:5432/postgres"
+            echo "PILOT_DB_CA_FILE=$PWD/ca.pem"
+            echo "PILOT_DB_SERVER_NAME=ci-db.test"
+          } >> "$GITHUB_ENV"
+
+      - name: Migrate
+        run: |
+          if npm pkg get scripts.migrate | grep -qv '{}'; then npm run migrate; else echo "No migrate script"; fi
+
+      - name: Start and check /readyz and /
+        run: |
+          if ! npm pkg get scripts.start | grep -qv '{}'; then echo "No start script"; exit 0; fi
+          npm start > "$RUNNER_TEMP/app.log" 2>&1 &
+          ok=""
+          for _ in $(seq 1 60); do
+            if curl -fsS "http://127.0.0.1:$PORT/readyz"; then ok=1; break; fi
+            sleep 1
+          done
+          echo
+          if [ -z "$ok" ]; then echo "The app did not become ready"; cat "$RUNNER_TEMP/app.log"; exit 1; fi
+          code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$PORT/")
+          echo "GET / -> $code"
+          [ "$code" = "200" ] || { cat "$RUNNER_TEMP/app.log"; exit 1; }
+
+      - name: App log
+        if: ${{ always() }}
+        run: cat "$RUNNER_TEMP/app.log" 2>/dev/null || true
