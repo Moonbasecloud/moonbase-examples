@@ -10,9 +10,9 @@ const { createPool } = require("./db");
 
 const MIGRATIONS = [
   {
-    // Step 1, the first prompt: "Build me an event page for the Riverbend
-    // Summer Picnic where guests can RSVP, with a database for guests, and put
-    // it live on moonbase."
+    // Step 1, the first prompt: "Build me an RSVP page for a full-moon
+    // stargazing night at the Moonbase Observatory, with a database for guests,
+    // and put it live on moonbase."
     id: "001_create_guests",
     sql: `
       CREATE TABLE guests (
@@ -28,10 +28,10 @@ const MIGRATIONS = [
     `,
   },
   {
-    // Step 2, from the same chat: "Add a meal choice for each guest".
-    // One meal per person in the party, so the list has party_size entries.
-    // RSVPs saved before this step keep meals empty (NULL): the owner view
-    // counts those guests as "not chosen yet".
+    // Step 2, from the same chat: "Add a snack choice for each guest".
+    // One snack per person in the party, kept in the meals column, so the list
+    // has party_size entries. RSVPs saved before this step keep meals empty
+    // (NULL): the owner view counts those guests as "not chosen yet".
     id: "002_add_meal_choice",
     sql: `
       ALTER TABLE guests ADD COLUMN meals TEXT[];

@@ -66,7 +66,7 @@ function cleanPartySize(value) {
   return Number.isInteger(n) && n >= 1 && n <= MAX_PARTY ? n : null;
 }
 
-// Step 2 ("Add a meal choice for each guest"): one valid meal per person in
+// Step 2 ("Add a snack choice for each guest"): one valid snack per person in
 // the party, read from meal_1 .. meal_<party size>.
 const MEAL_IDS = new Set(MEALS.map((meal) => meal.id));
 function cleanMeals(body, partySize) {
@@ -96,7 +96,7 @@ app.post("/rsvp", limitRsvps, async (req, res) => {
   if (!name) error = `Enter your name (1 to ${MAX_NAME} characters).`;
   else if (!email) error = "Enter a valid email address.";
   else if (!partySize) error = `Choose how many guests are coming, from 1 to ${MAX_PARTY}.`;
-  else if (!meals) error = partySize === 1 ? "Choose your meal." : `Choose a meal for each of the ${partySize} guests.`;
+  else if (!meals) error = partySize === 1 ? "Choose your snack." : `Choose a snack for each of the ${partySize} guests.`;
   if (error) {
     res.status(400).send(views.eventPage({ error, values: body }));
     return;
@@ -123,7 +123,7 @@ app.post("/rsvp", limitRsvps, async (req, res) => {
   }
 });
 
-// The owner view: headcount, meal totals and the guest list. It is open only
+// The owner view: headcount, snack totals and the guest list. It is open only
 // with the value of the OWNER_KEY environment variable, which is never in the
 // code. The key is sent in the form body, never in the address.
 function ownerKey() {
@@ -181,7 +181,7 @@ app.post("/owner", limitOwner, async (req, res) => {
       pool.query(
         "SELECT name, email, party_size, meals, updated_at FROM guests ORDER BY created_at, id",
       ),
-      // Step 2: how many of each meal, counting every guest in every party.
+      // Step 2: how many of each snack, counting every guest in every party.
       pool.query("SELECT meal, count(*)::int AS n FROM guests, unnest(meals) AS meal GROUP BY meal"),
     ]);
     const mealTotals = Object.fromEntries(meals.rows.map((row) => [row.meal, row.n]));

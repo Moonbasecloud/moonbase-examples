@@ -1,18 +1,18 @@
-# Event page with RSVPs and a managed database
+# RSVP page with a managed database
 
-An event page for the Riverbend Summer Picnic where guests RSVP. Their RSVPs are saved in a moonbase managed PostgreSQL database. This is the app from the quick start on the [moonbase GitHub page](https://github.com/Moonbasecloud), followed from the first prompt to the live result. Riverbend and its picnic are made up; change `event.js` to make it your own event.
+An RSVP page for Full Moon Night, a stargazing party at the Moonbase Observatory. Guests RSVP and pick a snack, and their RSVPs are saved in a moonbase managed PostgreSQL database. This is the app from the quick start on the [moonbase GitHub page](https://github.com/Moonbasecloud), followed from the first prompt to the live result. The observatory and its party are made up, on a real full-moon date (18 July 2027); change `event.js` to make it your own event.
 
 Live demo: <https://gh-example-event-rsvp.moonbase.host> (the app after both steps below)
 
 ## 1. The first prompt
 
 ```text
-Build me an event page for the Riverbend Summer Picnic where guests can RSVP, with a database for guests, and put it live on moonbase.
+Build me an RSVP page for a full-moon stargazing night at the Moonbase Observatory, with a database for guests, and put it live on moonbase.
 ```
 
 ## 2. What you get
 
-- **An event page** with the date, the time, the place and a short description.
+- **An event page** with the date, the time, the place, what to bring and a short description.
 - **An RSVP form** with name, email and the number of guests (up to 6, the guest included). Sending it again with the same email updates that RSVP instead of adding a second one.
 - **A confirmation** after sending, with what was saved.
 - **An owner view** at `/owner` with the headcount, the number of RSVPs and the guest list. It opens only with the owner key (see [The owner key](#the-owner-key)).
@@ -23,33 +23,33 @@ event-rsvp/
   moonbase.json      asks moonbase for a database and names the migration command
   migrate.js         the database changes, one per step, each applied once
   db.js              the connection pool, with the TLS settings moonbase requires
-  event.js           the event details, the largest party and the menu
+  event.js           the event details, the largest party and the snacks
   server.js          the Express app: the pages, the RSVP form, the owner view and /readyz
   views.js           the HTML pages
   rate-limit.js      per-address request limits, with the express-rate-limit package
-  public/            the stylesheet and form.js
+  public/            the stylesheet, the moon picture and form.js
 ```
 
 ## 3. Then, from the same chat
 
 ```text
-Add a meal choice for each guest
+Add a snack choice for each guest.
 ```
 
 This folder holds the app after this second step. Everything that belongs to it is marked `Step 2` in the code, so you can see what the second prompt changed.
 
-| | After the first prompt | After "Add a meal choice for each guest" |
+| | After the first prompt | After "Add a snack choice for each guest." |
 |---|---|---|
-| Database | `guests`: name, email, number of guests | The same table with a new `meals` column: one meal for each person in the party |
-| RSVP form | Name, email, number of guests | The same, plus one meal choice for each guest. `public/form.js` shows as many choices as the party has |
-| Confirmation | What was saved | The same, plus each guest's meal |
-| Owner view | Headcount and guest list | The same, plus **Meals to order**: a total for each meal and the guests who have not chosen yet |
+| Database | `guests`: name, email, number of guests | The same table with a new `meals` column: one snack for each person in the party |
+| RSVP form | Name, email, number of guests | The same, plus one snack choice for each guest. `public/form.js` shows as many choices as the party has |
+| Confirmation | What was saved | The same, plus each guest's snack |
+| Owner view | Headcount and guest list | The same, plus **Snacks to prepare**: a total for each snack and the guests who have not chosen yet |
 
 The change to the database is its own migration in `migrate.js`, after the first one:
 
 ```js
 {
-  // Step 2, from the same chat: "Add a meal choice for each guest".
+  // Step 2, from the same chat: "Add a snack choice for each guest".
   id: "002_add_meal_choice",
   sql: `
     ALTER TABLE guests ADD COLUMN meals TEXT[];
@@ -59,7 +59,7 @@ The change to the database is its own migration in `migrate.js`, after the first
 },
 ```
 
-`migrate.js` records each migration it applies in a `schema_migrations` table, so on the next deploy only `002_add_meal_choice` runs. RSVPs saved before the change keep their guests and have no meals yet; the owner view counts those guests under **Not chosen yet**, and a guest who sends the form again picks meals then. The menu itself is the `MEALS` list in `event.js`.
+`migrate.js` records each migration it applies in a `schema_migrations` table, so on the next deploy only `002_add_meal_choice` runs. RSVPs saved before the change keep their guests and have no snacks yet; the owner view counts those guests under **Not chosen yet**, and a guest who sends the form again picks snacks then. The snacks themselves are the `MEALS` list in `event.js`.
 
 ## 4. Deploy it
 
@@ -121,7 +121,7 @@ Keep talking to the same agent. It uses a moonbase connector tool for each of th
 | `Is my RSVP page live? Check its status and its database.` | Calls `deploy_status`: whether it is live, the current version, the live address and the database. |
 | `Show me the recent deploys of my RSVP page and why any of them failed.` | Calls `deploy_logs`: the recent deploys, their status and moonbase's explanation of a failed one. |
 | `Roll back my RSVP page to the previous version.` | Calls `list_versions` to find it, then `rollback`. |
-| `Connect picnic.example.com to my RSVP page.` | Calls `add_domain` and tells you the DNS record that proves you own the domain. |
+| `Connect fullmoon.example.com to my RSVP page.` | Calls `add_domain` and tells you the DNS record that proves you own the domain. |
 | `Export my RSVP database.` | Calls `export_database` and gives you the link to your database's export page, where you download it. |
 
 A rollback puts an earlier version's code back live. It does not undo database changes: after rolling back past step 2, the `meals` column stays and the older code ignores it.
@@ -146,8 +146,8 @@ Then open `http://localhost:3000`, and `http://localhost:3000/owner` for the own
 ## How it behaves
 
 - `GET /readyz` answers `200` after one successful `SELECT 1` and `503` while the database cannot be reached. moonbase asks this path after a deploy.
-- `POST /rsvp` takes the form: name up to 80 characters, an email address, 1 to 6 guests and a meal for each guest. Each visitor address can send it 10 times per 10 minutes; after that it answers `429` with a `Retry-After` header. Every address can also make up to 300 requests a minute in all. The counts are kept in the app's memory, so they start again when the app restarts or sleeps.
-- One RSVP per email address, compared without case. Sending again replaces the name, the number of guests and the meals.
+- `POST /rsvp` takes the form: name up to 80 characters, an email address, 1 to 6 guests and a snack for each guest. Each visitor address can send it 10 times per 10 minutes; after that it answers `429` with a `Retry-After` header. Every address can also make up to 300 requests a minute in all. The counts are kept in the app's memory, so they start again when the app restarts or sleeps.
+- One RSVP per email address, compared without case. Sending again replaces the name, the number of guests and the snacks.
 - Queries bind their values as parameters, and every page writes visitors' text as text, never as HTML.
 - The owner view is not cached and asks search engines not to index it. Anyone with the owner key sees the guest list, emails included, so share the key only with people who should.
 - No email is sent to guests. This is a demo: it has no sign-in for guests, no spam filter and no way for a guest to cancel other than asking the owner.
