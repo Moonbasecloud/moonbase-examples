@@ -25,6 +25,10 @@ app.disable("x-powered-by");
 app.use(express.json({ limit: "4kb" }));
 app.use(express.static(path.join(__dirname, "public")));
 
+// A generous limit on every request from one address, on top of the tighter
+// limit on posting below.
+app.use(createRateLimit({ limit: 300, windowMs: 60 * 1000 }));
+
 // moonbase asks /readyz after a deploy to learn whether the app is really
 // serving: 2xx when ready, 503 while it is not.
 app.get("/readyz", async (_req, res) => {
@@ -56,7 +60,11 @@ function cleanText(value, max) {
   return text.length >= 1 && text.length <= max ? text : null;
 }
 
-const limitPosts = createRateLimit({ limit: POST_LIMIT, windowMs: POST_WINDOW_MS });
+const limitPosts = createRateLimit({
+  limit: POST_LIMIT,
+  windowMs: POST_WINDOW_MS,
+  message: "Too many entries from your address.",
+});
 
 app.post("/api/entries", limitPosts, async (req, res) => {
   const name = cleanText(req.body?.name, MAX_NAME);
