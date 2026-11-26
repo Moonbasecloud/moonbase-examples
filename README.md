@@ -58,15 +58,14 @@ A rollback puts an earlier version's code back live. It does not undo rows alrea
 
 ## Other ways to deploy
 
-- **By hand.** ZIP the example's folder (leave out `node_modules` and build output) and upload it from **+ New mission** in moonbase. See [Getting Started](https://moonbase.cloud/docs/getting-started?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch).
+- **By hand.** ZIP the example's folder (leave out `node_modules` and build output) and upload it as a new project with the **+ New mission** button in moonbase. See [Getting Started](https://moonbase.cloud/docs/getting-started?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch).
 - **From CI.** See [Deploying from GitHub Actions](https://moonbase.cloud/docs/github-actions-ci-cd?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch).
 
 ## What to know
 
-- A deployed project is called a **mission**.
 - An app must listen on the `PORT` environment variable. Both examples do.
 - The container's own disk does not keep data between deploys. Both examples keep their data in a database for that reason.
-- A managed PostgreSQL database is optional and included on every plan, Free included: up to one per mission, inside the plan's storage. A project asks for one with a `moonbase.json` file, as both examples do.
+- A managed PostgreSQL database is optional and included on every plan, Free included: up to one per project, inside the plan's storage. A project asks for one with a `moonbase.json` file, as both examples do.
 - Plans and limits: [Pricing](https://moonbase.cloud/pricing?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch).
 
 ## License

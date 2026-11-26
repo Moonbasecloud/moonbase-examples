@@ -20,7 +20,7 @@ nextjs-minimal/
 
 ## The database
 
-A managed PostgreSQL database is optional on moonbase and included on every plan, Free included: up to one per mission, inside the plan's storage. This example asks for one with `moonbase.json`, the same file the [guestbook](../express-guestbook/) uses:
+A managed PostgreSQL database is optional on moonbase and included on every plan, Free included: up to one per project, inside the plan's storage. This example asks for one with `moonbase.json`, the same file the [guestbook](../express-guestbook/) uses:
 
 ```json
 {
@@ -96,4 +96,4 @@ Then open `http://localhost:3000`. Without the database settings the app still b
 - Values in `NEXT_PUBLIC_*` variables reach the browser. Never put a secret in one.
 - On the free plan a server app sleeps after a while with no visitors and wakes on the next request, so the first load after a quiet period is slower.
 
-More: [Getting Started](https://moonbase.cloud/docs/getting-started?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch), [Environment Variables](https://moonbase.cloud/docs/environment-variables?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch) and [Mission Sleep & Wake](https://moonbase.cloud/docs/sleeping-sites?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch).
+More: [Getting Started](https://moonbase.cloud/docs/getting-started?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch), [Environment Variables](https://moonbase.cloud/docs/environment-variables?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch) and [Sleep & Wake](https://moonbase.cloud/docs/sleeping-sites?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch).

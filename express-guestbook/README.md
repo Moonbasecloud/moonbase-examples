@@ -16,7 +16,7 @@ express-guestbook/
 
 ## The database
 
-A managed PostgreSQL database is optional on moonbase and included on every plan, Free included: up to one per mission, inside the plan's storage. This example asks for one with `moonbase.json`:
+A managed PostgreSQL database is optional on moonbase and included on every plan, Free included: up to one per project, inside the plan's storage. This example asks for one with `moonbase.json`:
 
 ```json
 {
