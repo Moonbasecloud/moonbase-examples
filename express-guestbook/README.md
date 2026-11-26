@@ -10,7 +10,7 @@ express-guestbook/
   migrate.js         creates the table (safe to run again)
   db.js              the connection pool, with the TLS settings moonbase requires
   server.js          the Express app: the page, the API and /readyz
-  rate-limit.js      a small per-address limit on posting
+  rate-limit.js      per-address request limits, with the express-rate-limit package
   public/index.html  the guestbook page
 ```
 
@@ -119,7 +119,7 @@ Then open `http://localhost:3000`. Keep real connection strings out of the repos
 
 - `GET /readyz` answers `200` after one successful `SELECT 1` and `503` while the database cannot be reached. moonbase asks this path after a deploy.
 - `GET /api/entries` returns the newest 50 entries. `POST /api/entries` takes `{"name", "message"}` as JSON (name up to 40 characters, message up to 280).
-- Each visitor address can post 5 entries per 10 minutes; after that `POST /api/entries` answers `429` with a `Retry-After` header. The count is kept in the app's memory, so it starts again when the app restarts or sleeps.
+- Each visitor address can post 5 entries per 10 minutes; after that `POST /api/entries` answers `429` with a `Retry-After` header. Every address can also make up to 300 requests a minute in all. The counts are kept in the app's memory, so they start again when the app restarts or sleeps.
 - Queries bind their values as parameters, and the page writes entries as text, never as HTML.
 - This is a demo: apart from that posting limit it has no sign-in, no spam filter and no moderation. Add those before you use it for real visitors.
 
