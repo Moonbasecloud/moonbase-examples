@@ -9,6 +9,14 @@ updates:
         update-types: [minor, patch]
 
   - package-ecosystem: npm
+    directory: /event-rsvp
+    schedule:
+      interval: weekly
+    groups:
+      event-rsvp-minor-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: npm
     directory: /express-guestbook
     schedule:
       interval: weekly

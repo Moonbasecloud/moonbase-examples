@@ -8,10 +8,11 @@ Hosting, database, domains, analytics, rollbacks, team access — all in one pla
 
 ### → [moonbase.cloud](https://moonbase.cloud/?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch)
 
-This repository holds two small apps that deploy to moonbase as they are. Each one saves its data in a moonbase managed PostgreSQL database, is short enough to read in a few minutes, and has a one-line prompt you paste into your AI agent to put it online. After that you manage it from the same chat.
+This repository holds three small apps that deploy to moonbase as they are. Each one saves its data in a moonbase managed PostgreSQL database, is short enough to read in a few minutes, and has a one-line prompt you paste into your AI agent to put it online. After that you manage it from the same chat.
 
 | Example | What it shows | Kind |
 |---|---|---|
+| [`event-rsvp`](event-rsvp/) | An event page where guests RSVP, with an owner view of the headcount. The app from the quick start on the [moonbase GitHub page](https://github.com/Moonbasecloud), with its first prompt and one follow-up change from the same chat. | Node server + database |
 | [`express-guestbook`](express-guestbook/) | A Node/Express app that saves entries in a moonbase managed PostgreSQL database. [Live demo](https://gh-example-express-guestbook.moonbase.host) | Node server + database |
 | [`nextjs-minimal`](nextjs-minimal/) | A small Next.js app that saves notes in a moonbase managed PostgreSQL database. [Live demo](https://gh-example-nextjs-minimal.moonbase.host) | Next.js + database |
 
@@ -63,9 +64,9 @@ A rollback puts an earlier version's code back live. It does not undo rows alrea
 
 ## What to know
 
-- An app must listen on the `PORT` environment variable. Both examples do.
-- The container's own disk does not keep data between deploys. Both examples keep their data in a database for that reason.
-- A managed PostgreSQL database is optional and included on every plan, Free included: up to one per project, inside the plan's storage. A project asks for one with a `moonbase.json` file, as both examples do.
+- An app must listen on the `PORT` environment variable. Every example here does.
+- The container's own disk does not keep data between deploys. Every example here keeps its data in a database for that reason.
+- A managed PostgreSQL database is optional and included on every plan, Free included: up to one per project, inside the plan's storage. A project asks for one with a `moonbase.json` file, as every example here does.
 - Plans and limits: [Pricing](https://moonbase.cloud/pricing?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch).
 
 ## License
