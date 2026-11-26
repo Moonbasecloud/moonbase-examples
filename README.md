@@ -12,7 +12,7 @@ This repository holds three small apps that deploy to moonbase as they are. Each
 
 | Example | What it shows | Kind |
 |---|---|---|
-| [`event-rsvp`](event-rsvp/) | An event page where guests RSVP, with an owner view of the headcount. The app from the quick start on the [moonbase GitHub page](https://github.com/Moonbasecloud), with its first prompt and one follow-up change from the same chat. | Node server + database |
+| [`event-rsvp`](event-rsvp/) | An event page where guests RSVP, with an owner view of the headcount. The app from the quick start on the [moonbase GitHub page](https://github.com/Moonbasecloud), with its first prompt and one follow-up change from the same chat. [Live demo](https://gh-example-event-rsvp.moonbase.host) | Node server + database |
 | [`express-guestbook`](express-guestbook/) | A Node/Express app that saves entries in a moonbase managed PostgreSQL database. [Live demo](https://gh-example-express-guestbook.moonbase.host) | Node server + database |
 | [`nextjs-minimal`](nextjs-minimal/) | A small Next.js app that saves notes in a moonbase managed PostgreSQL database. [Live demo](https://gh-example-nextjs-minimal.moonbase.host) | Next.js + database |
 
