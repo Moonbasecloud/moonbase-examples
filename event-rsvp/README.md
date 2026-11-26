@@ -2,7 +2,6 @@
 
 An event page for the Riverbend Summer Picnic where guests RSVP. Their RSVPs are saved in a moonbase managed PostgreSQL database. This is the app from the quick start on the [moonbase GitHub page](https://github.com/Moonbasecloud), followed from the first prompt to the live result. Riverbend and its picnic are made up; change `event.js` to make it your own event.
 
-Live demo: <https://gh-example-event-rsvp.moonbase.host> (the app after both steps below)
 
 ## 1. The first prompt
 
