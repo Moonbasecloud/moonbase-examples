@@ -2,12 +2,15 @@
 
 A Node/Express app where visitors leave a name and a message. Entries are saved in a moonbase managed PostgreSQL database.
 
+Live demo: <https://gh-example-express-guestbook.moonbase.host>
+
 ```text
 express-guestbook/
   moonbase.json      asks moonbase for a database and names the migration command
   migrate.js         creates the table (safe to run again)
   db.js              the connection pool, with the TLS settings moonbase requires
   server.js          the Express app: the page, the API and /readyz
+  rate-limit.js      a small per-address limit on posting
   public/index.html  the guestbook page
 ```
 
@@ -72,6 +75,23 @@ Deploy the express-guestbook folder to moonbase with the managed PostgreSQL data
 
 If moonbase cannot create the database, the deploy result says so. The guestbook then stops at start and names the missing settings; it never runs without its database.
 
+## Manage it from chat
+
+Keep talking to the same agent. It uses a moonbase connector tool for each of these; nothing needs a terminal.
+
+| Paste this | What the agent does |
+|---|---|
+| `Is my guestbook live? Check its status and its database.` | Calls `deploy_status`: whether it is live, the current version, the live address and the database. |
+| `Show me the recent deploys of my guestbook and why any of them failed.` | Calls `deploy_logs`: the recent deploys, their status and moonbase's explanation of a failed one. |
+| `Add a page that lists the newest entries first, then deploy it.` | Changes the code and calls `deploy`. The migration runs before the new version goes live. |
+| `Roll back my guestbook to the previous version.` | Calls `list_versions` to find it, then `rollback`. |
+| `Connect guestbook.example.com to my guestbook.` | Calls `add_domain` and tells you the DNS record that proves you own the domain. |
+| `Export my guestbook database.` | Calls `export_database` and gives you the link to your database's export page, where you download it. |
+
+`deploy_logs` shows the deploy history and why a deploy failed. It does not show the logs of your running app.
+
+A rollback puts an earlier version's code back live. It does not undo rows already saved in the database.
+
 ## Run it locally
 
 Without database settings the app stops at once and names what is missing:
@@ -99,7 +119,8 @@ Then open `http://localhost:3000`. Keep real connection strings out of the repos
 
 - `GET /readyz` answers `200` after one successful `SELECT 1` and `503` while the database cannot be reached. moonbase asks this path after a deploy.
 - `GET /api/entries` returns the newest 50 entries. `POST /api/entries` takes `{"name", "message"}` as JSON (name up to 40 characters, message up to 280).
+- Each visitor address can post 5 entries per 10 minutes; after that `POST /api/entries` answers `429` with a `Retry-After` header. The count is kept in the app's memory, so it starts again when the app restarts or sleeps.
 - Queries bind their values as parameters, and the page writes entries as text, never as HTML.
-- This is a demo: it has no sign-in, no spam protection and no moderation. Add those before you use it for real visitors.
+- This is a demo: apart from that posting limit it has no sign-in, no spam filter and no moderation. Add those before you use it for real visitors.
 
 More: [Getting Started](https://moonbase.cloud/docs/getting-started?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch) and [Environment Variables](https://moonbase.cloud/docs/environment-variables?utm_source=github&utm_medium=moonbase-examples&utm_campaign=gh-launch).

@@ -2,18 +2,20 @@
   "name": "moonbase-example-nextjs-minimal",
   "version": "1.0.0",
   "private": true,
-  "description": "A minimal Next.js app that deploys to moonbase as it is.",
+  "description": "A small Next.js app that saves notes in a moonbase managed PostgreSQL database.",
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p ${PORT:-3000}"
+    "start": "next start -p ${PORT:-3000}",
+    "migrate": "node migrate.js"
   },
   "engines": {
     "node": ">=20.9"
   },
   "dependencies": {
     "next": "^16.4.6",
+    "pg": "^8.13.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   }
