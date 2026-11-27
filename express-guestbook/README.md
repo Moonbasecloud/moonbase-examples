@@ -86,7 +86,7 @@ Keep talking to the same agent. It uses a moonbase connector tool for each of th
 | `Add a page that lists the newest entries first, then deploy it.` | Changes the code and calls `deploy`. The migration runs before the new version goes live. |
 | `Roll back my guestbook to the previous version.` | Calls `list_versions` to find it, then `rollback`. |
 | `Connect guestbook.example.com to my guestbook.` | Calls `add_domain` and tells you the DNS record that proves you own the domain. |
-| `Export my guestbook database.` | Calls `export_database` and gives you the link to your database's export page, where you download it. |
+| `Export my guestbook database.` | Calls `export_database` and gives you the link to your database's export page, where you download it when your project's Database page offers export. |
 
 `deploy_logs` shows the deploy history and why a deploy failed. It does not show the logs of your running app.
 
