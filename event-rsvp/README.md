@@ -6,7 +6,7 @@ An event page for the Riverbend Summer Picnic where guests RSVP. Their RSVPs are
 ## 1. The first prompt
 
 ```text
-Build me an event page for the Riverbend Summer Picnic where guests can RSVP, with a database for guests, and put it live on moonbase.
+Build me an event page for the Riverbend Summer Picnic where guests can RSVP, with a database for guests. Launch it on moonbase and send me the link.
 ```
 
 ## 2. What you get
